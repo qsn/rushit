@@ -49,6 +49,18 @@ ljsyscall-dir  := $(top-dir)/vendor/github.com/justincormack/ljsyscall
 ljsyscall-srcs := $(shell find $(ljsyscall-dir)/syscall.lua $(ljsyscall-dir)/syscall -name '*.lua')
 ljsyscall-objs := $(patsubst %.lua,%.o,$(ljsyscall-srcs))
 ljsyscall-lib  := $(staging-dir)/lib/libljsyscall.a
+ifeq ($(ljsyscall-objs),)
+define msg
+
+ljsyscall sources missing. Submodule not cloned? Try running:
+
+git submodule update --init $(ljsyscall-dir)
+
+endef
+abort:
+	$(info $(msg))
+	$(error ljsyscall not found)
+endif
 
 base-objs := \
 	common.o \
